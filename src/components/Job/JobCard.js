@@ -1,8 +1,7 @@
 import React from "react";
 import { Box,Grid,Typography,Button,makeStyles } from "@material-ui/core";
 import theme from "../../theme/theme";
-
-const skills= ["Javascript", "React.js", "Node.js"];
+import {differenceInMinutes} from "date-fns";
 
 const useStyles = makeStyles((theme) => ({
     wrapper:{
@@ -34,22 +33,22 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default props => {
+export default (props) => {
     const classes = useStyles()
     return(
         <Box p={2} className={classes.wrapper}>
             <Grid container alignItems="center">
                 <Grid item xs>
-                    <Typography variant="subtitle1">Frontend Dev</Typography>
-                    <Typography className={classes.companyName} variant="subtitle1">Google</Typography>
+                    <Typography variant="subtitle1">{props.title}</Typography>
+                    <Typography className={classes.companyName} variant="subtitle1">{props.companyName}</Typography>
                 </Grid>
                 <Grid item container xs>
-                    {skills.map((skill) => ( <Grid key={skill} className={classes.skillChip} item>{skill}</Grid>))}
+                    {props.skills.map((skill) => ( <Grid key={skill} className={classes.skillChip} item>{skill}</Grid>))}
                 </Grid>
                 <Grid item container direction="column" alignItems="flex-end" xs>
                     <Grid item>
                         <Typography variant="caption">
-                            2577 min ago | Full time | Remote
+                            {differenceInMinutes(Date.now(),props.postedOn)} min ago | {props.type} | {props.location}
                         </Typography>
                     </Grid>
                     <Grid item>
