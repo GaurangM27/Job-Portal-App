@@ -8,7 +8,7 @@ export default props => <Box py={10} bgcolor="secondary.main" color="white">
             <Typography variant="h4">
                 Open Job Listing
             </Typography>
-            <Button variant="contained" color="primary" disableElevation>Post a Job</Button>
+            <Button onClick={props.openModal} variant="contained" color="primary" disableElevation>Post a Job</Button>
             </Box>
         </Grid>
     </Grid>

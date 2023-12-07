@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { Box,Grid,FilledInput ,Select,MenuItem,Dialog,DialogTitle,DialogContent,DialogActions,makeStyles,Button,IconButton, Typography } from "@material-ui/core";
+import { Box,Grid,FilledInput ,Select,MenuItem,Dialog,DialogTitle,DialogContent,DialogActions,makeStyles,Button,IconButton, Typography, CircularProgress } from "@material-ui/core";
 import { Close as CloseIcon} from '@material-ui/icons';
 import theme from "../../theme/theme";
 
@@ -26,6 +26,8 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default (props)=> {
+  
+  const [loading , setLoading] = useState(false);
     const [jobDetails,setJobDetails] = useState({
         title : "",
         type : "Full Time",
@@ -42,6 +44,17 @@ export default (props)=> {
         setJobDetails(oldState => ({...oldState,[e.target.name] : e.target.value}))
     }
 
+    const handleSubmit = async ()=>{
+      for(const field in jobDetails){
+        if (typeof jobDetails[field] === 'string' && !jobDetails[field])
+        return;
+      }
+      if(!jobDetails.skills.length) return;
+      setLoading(true);
+      await props.postJobs(jobDetails);
+      setLoading(false);
+    }
+
     const addRemoveSkill = (skill) => jobDetails.skills.includes(skill) ? 
     setJobDetails((oldState => ({
       ...oldState,skills : oldState.skills.filter((s) => s !== skill ),
@@ -53,7 +66,7 @@ export default (props)=> {
     const classes=useStyles();
     const skills = ["JavaScript", "React", "Node", "Vue", "Firebase", "MongoDB", "SQL"];
     return (
-      <Dialog open={true} fullWidth>
+      <Dialog open={props.modal} fullWidth>
         <DialogTitle>
           <Box
             display="flex"
@@ -61,7 +74,7 @@ export default (props)=> {
             alignItems="center"
           >
             Post Job
-            <IconButton>
+            <IconButton onClick={props.closeModal}>
               <CloseIcon />
             </IconButton>
           </Box>
@@ -173,8 +186,15 @@ export default (props)=> {
             alignItems="center"
           >
             <Typography variant="caption">*Required Fields</Typography>
-            <Button variant="contained" disableElevation color="primary">
-              Post Job
+            <Button onClick={handleSubmit} 
+            variant="contained" 
+            disableElevation 
+            color="primary"
+            disabled={loading}
+            >
+              {loading ? (<CircularProgress color="secondary"  size={22}/>)
+              : ("Post Job")
+              }
             </Button>
           </Box>
         </DialogActions>
